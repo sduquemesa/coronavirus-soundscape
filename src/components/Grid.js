@@ -12,6 +12,7 @@ import Waypoint from "react-waypoint";
 import WidgetButton from "./WidgetButton";
 import Plot from "./Plot"
 import Constants from "./Constants";
+import NodeLegend from "./NodeLegend";
 
 
 type Props = {
@@ -196,6 +197,7 @@ export default class Grid extends Component<Props, State> {
     }
 
     let gridWidth = Math.min(idealWidth, document.documentElement.clientWidth - 40);
+    // let gridWidth = document.documentElement.clientWidth;
     let nodeSize = Math.floor(gridWidth / this.props.gridCols);
 
     gridWidth = nodeSize * this.props.gridCols;
@@ -654,7 +656,7 @@ export default class Grid extends Component<Props, State> {
     // console.log('redrawing...');
 
     let context = this.canvas.getContext('2d');
-    context.fillStyle = '#FFF';
+    context.fillStyle = '#EEE';
     context.fillRect(0, 0, this.gridWidth, this.gridWidth);
 
     for (let r = 0; r < this.grid.length; r++) {
@@ -730,7 +732,7 @@ export default class Grid extends Component<Props, State> {
       gap = 0;
     }
 
-    // context.fillRect(x, y, w, w);
+    context.fillRect(x, y, w, w);
     context.fillRect(x, y, w - gap, w - gap);
     // context.beginPath();
     // context.arc(x+w/2, y+w/2, w/2-1, 0, 2 * Math.PI);
@@ -1004,19 +1006,21 @@ export default class Grid extends Component<Props, State> {
     }
 
     return (
-        <div className="widget-container" style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-          <div style={{display: 'flex', flexDirection: 'row'}}>
-            <Waypoint onEnter={this.onEnter} onLeave={this.onLeave} scrollableAncestor={window}>
-              <canvas ref={this.canvasRef} width={this.gridWidth} height={this.gridWidth} />
-            </Waypoint>
-            {percentAliveSlider}
-          </div>
-          {playbackControls}
-          <div style={{height: "0.5em"}}/>
+      <div className="simulation-container">
+
+        <div className="automata">
+          <Waypoint onEnter={this.onEnter} onLeave={this.onLeave} scrollableAncestor={window}>
+            <canvas ref={this.canvasRef} width={this.gridWidth} height={this.gridWidth} />
+          </Waypoint>
+          {percentAliveSlider}
+        </div>
+
+        <div className="controls">
+          <div style={{ height: "0.5em" }} />
           {highlightedSlider}
 
-          {hospitalCapacitySlider}
-          {deathRateSlider}
+          {/* {hospitalCapacitySlider} */}
+          {/* {deathRateSlider} */}
           {chanceOfIsolationAfterSymptomsSlider}
           {decreaseInEncountersAfterSymptomsSlider}
 
@@ -1026,19 +1030,37 @@ export default class Grid extends Component<Props, State> {
           {transmissionProbabilitySlider}
           {immunityFractionSlider}
 
-          {daysIncubatingSlider}
-          {daysSymptomaticSlider}
+          {/* {daysIncubatingSlider} */}
+          {/* {daysSymptomaticSlider} */}
 
           {toggleLongDistanceNetwork}
 
-          {protip}
-
-          {plot}
-
-
-          {/*{speedSlider}*/}
-          <Interval milliseconds={intervalMillis} callback={this.onTick} />
+          {playbackControls}
         </div>
+        
+        <div className="curve">
+          {plot}  
+        </div>
+        
+        <div className="audio"></div>
+
+        <div className="blankboxl">
+          <span className="legend-text">
+            Infected &nbsp;<NodeLegend type="infected"/> 
+          </span>
+          <span className="legend-text">
+            Recovered &nbsp;<NodeLegend type="removed"/> 
+          </span>
+          <span className="legend-text">
+            Dead &nbsp;<NodeLegend type="dead"/>
+          </span>
+        </div>
+
+        <div className="blankboxr"></div>
+
+        {/*{speedSlider}*/}
+        <Interval milliseconds={intervalMillis} callback={this.onTick} />
+      </div>
     )
   }
 }

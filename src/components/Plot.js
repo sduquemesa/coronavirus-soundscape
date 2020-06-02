@@ -390,12 +390,12 @@ export default class Plot extends Component<Props, State> {
     return (
       <div>
         <div className="plot-container">
-          {/*<div className="plot-yaxis">population</div>*/}
-          <div className="plot-xaxis">time ⟶</div>
+          {/* <div className="plot-yaxis">population</div> */}
           <div className="plot-chart">
             <canvas ref={this.canvasRef} width={widthToUse} height={this.height} />
           </div>
-          <div className="plot-legend">
+          <div className="plot-xaxis">time ⟶</div>
+          {/* <div className="plot-legend">
             <div className="plot-legend-button">
               <WidgetButton onClick={() => {this.resetArrays()}}>Clear</WidgetButton>
             </div>
@@ -404,7 +404,7 @@ export default class Plot extends Component<Props, State> {
               <div>{recoveredCB}</div>
               <div>{deadCB}</div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     )

@@ -7,6 +7,10 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
   vertical-align: baseline;
 }
 
+/* html, body { width:100%; height:100%; } */
+
+/* canvas { display:block; }  */
+
 HTML {
   overflow-x: hidden;
   overflow-y: auto;
@@ -44,7 +48,7 @@ HTML, BODY {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.main-container {
+/* .main-container {
   display: grid;
   grid-template-areas:
       "header  header  header"
@@ -52,38 +56,70 @@ HTML, BODY {
       "footer  footer  footer";
   grid-template-columns: auto minmax(auto, 650px) auto;
   grid-template-rows: 50px minmax(calc(100% - 40px), auto) 20px;
+} */
+
+.simulation-container {
+  display: grid;
+  grid-template-areas:
+      "controls automata audio"
+      "blankboxl  curve  blankboxr";
+  grid-template-columns: 25% minmax(auto, 650px) 25%;
+  grid-template-rows: 75% auto;
 }
 
 @media only screen and (max-width: 375px) {
-  .main-container {
+  .simulation-container {
     grid-template-columns: auto minmax(auto, 375px) auto;
   }
 }
 
 
-.header {
-  grid-area: header;
-  /*background-color: #888;*/
+.controls {
+  grid-area: controls;
+  /* background-color: #b5c9e6; */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
-.blank-l {
-  grid-area: blank-l;
+.automata {
+  grid-area: automata;
+  justify-self: center;
+
+  /* padding: 3em 1em; */
 }
 
-.blank-r {
-  grid-area: blank-r;
+.audio {
+  grid-area: audio;
+  background-color: #b5c9e6;
 }
 
-.content {
-  grid-area: content;
-
-  padding: 3em 1em;
+.curve {
+  grid-area: curve;
+  /* background-color: #444; */
 }
 
-.footer {
-  grid-area: footer;
-  /*background-color: #F88;*/
+.blankboxl {
+  grid-area: blankboxl;
+  /* background-color: rgba(255, 0, 0, 0.24); */
+
+  align-self: center;
+  justify-self: right;
+  display: flex;
+  flex-direction: column;
+
 }
+
+.legend-text {
+  padding: 0.5em;
+  text-align: right;
+}
+
+.blankboxr {
+  grid-area: blankboxr;
+  background-color: #A00;
+}
+
 
 
 /********* HYPHENATION *********/
@@ -113,117 +149,12 @@ H1, H2, H3, H4, H5 {
 
 
 
-
-.post-content DIV {
-  font-size: 13pt;
-  line-height: 140%;
-}
-
-.post-content H5 {
-  font-size: 13pt;
-  line-height: 140%;
-
-  font-weight: normal;
-}
-
-.post-content H1 {
-  margin-top: 0.8em;
-  margin-bottom: 0;
-
-  font-size: 44pt;
-
-  font-family: "Rosarivo", "Lato", sans-serif;
-
-  line-height: 1.0;
-  font-style: normal;
-  font-weight: 700;
-
-  text-align: center;
-}
-
-.post-content H1 + H5 {
-  margin-top: 1rem;
-  margin-bottom: 4rem;
-
-  text-align: center;
-}
-
-.post-content H3 {
-  font-size: 24pt;
-  line-height: 100%;
-}
-
-.post-content BLOCKQUOTE {
-  margin: 0 2rem;
-  padding: 1rem 0;
-
-  font-size: 11pt;
-  line-height: 120%;
-}
-
-
-
-
-
-
-.post-content > DIV {
-  text-align: left;
-  margin-bottom: 1em;
-}
-
-.post-content > DIV > H3 {
-  margin-top: 4rem;
-}
-
-.post-content IMG {
-  max-width: 100%;
-}
-
-
-
-
-
 .playback-controls-container {
   display: flex;
   flex-direction: row;
   align-items: stretch;
   justify-content: center;
 }
-
-.figure-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-
-  padding: 2.5em 0;
-}
-
-.figure-title {
-  margin-bottom: 2em;
-
-  font-size: 12pt;
-  color: #000;
-  font-weight: bold;
-}
-
-.figure-caption {
-  margin-top: 1.5em;
-
-  font-size: 10pt;
-  color: #444;
-  /*font-style: italic;*/
-}
-
-.figure-body {
-  width: 100%;
-}
-
-.figure-body.image {
-  width: initial;
-  max-width: 100%;
-}
-
 
 .aside-container {
   color: #000;
@@ -291,8 +222,9 @@ CODE {
 }
 
 
-.plot-container {
+/* .plot-container {
   margin-top: 1.0em;
+  margin-bottom: 1.0em;
 
   display: grid;
   grid-template-areas:
@@ -303,7 +235,15 @@ CODE {
   grid-template-rows: auto auto auto;
 
   grid-row-gap: 0;
-  /*background-color: #fafafa;*/
+}  */
+
+
+.plot-container {
+  margin-top: 1.0em;
+  margin-bottom: 1.0em;
+
+  display: flex;
+  flex-direction: column;
 }
 
 .plot-legend {
@@ -326,11 +266,19 @@ CODE {
   font-size: 10pt !important;
 }
 
-.plot-xaxis {
+/* .plot-xaxis {
   grid-area: xaxis;
 
   justify-self: center;
   align-self: center;
+
+  font-size: 10pt !important;
+} */
+
+.plot-xaxis {
+  justify-self: center;
+  align-self: center;
+  order: 1;
 
   font-size: 10pt !important;
 }
@@ -348,10 +296,17 @@ CODE {
   margin: 0 -1.4em;
 }
 
-.plot-chart {
+/* .plot-chart {
   grid-area: chart;
 
   height: 150px;
+} */
+
+.plot-chart {
+  /* align-content: center; */
+  justify-self: center;
+  align-self: center;
+  order: 0;
 }
 
 
