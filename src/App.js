@@ -75,11 +75,11 @@ class App extends Component<Props, State> {
 
     return (
       <div className="main-container">
-        <Grid gridRows={201}
-              gridCols={201}
+        <Grid gridRows={61}
+              gridCols={61}
               // highlight="transmissionRate"
               hospitalCapacityPct={0.05}
-              nodeSize={3}
+              nodeSize={9}
               nug={5}
               randomSeed={100}
               showAliveFraction={true}

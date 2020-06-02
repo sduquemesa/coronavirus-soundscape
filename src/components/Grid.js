@@ -719,6 +719,8 @@ export default class Grid extends Component<Props, State> {
       context.fillStyle = Constants.REMOVED_COLOR;
     } else if (node.isDead()) {
       context.fillStyle = Constants.DEAD_COLOR;
+    } else if (node.isInQuarentine()) {
+      context.fillStyle = Constants.QUARENTINE_COLOR;
     } else {
       // Node is susceptible
       context.fillStyle = Constants.SUSCEPTIBLE_COLOR;
@@ -732,15 +734,15 @@ export default class Grid extends Component<Props, State> {
     }
 
     let gap = 1;
-    if (this.nodeSize < 5 || this.nodeSize < this.props.nodeSize) {
-      gap = 0;
-    }
+    // if (this.nodeSize < 5 || this.nodeSize < this.props.nodeSize) {
+    //   gap = 0;
+    // }
 
-    context.fillRect(x, y, w, w);
+    // context.fillRect(x, y, w, w);
     context.fillRect(x, y, w - gap, w - gap);
     
     if ( node.isInQuarentine() ) {
-      context.strokeStyle = Constants.QUARENTINE_COLOR;
+      context.strokeStyle = Constants.QUARENTINE_STROKE;
       context.strokeRect(x, y, w - gap, w - gap)
     }
     // context.beginPath();
