@@ -927,7 +927,7 @@ export default class Grid extends Component<Props, State> {
 
     let playbackControls = null;
     if (showAll || this.props.showPlaybackControls) {
-      let newNetworkButton = <WidgetButton onClick={() => {this.setState({playing: false}); this.generate(true); this.forceUpdate();} } >Reset</WidgetButton>;
+      let newNetworkButton = <WidgetButton onClick={() => {this.setState({playing: false}); this.generate(true); this.forceUpdate(); this.resetPlotVariables()} } >Reset</WidgetButton>;
       let text = <span style={{fontSize: '10pt'}}>▷</span>;
       if (this.state.playing) {
         text = <span><b>||</b></span>;
