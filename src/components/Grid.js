@@ -740,7 +740,7 @@ export default class Grid extends Component<Props, State> {
     context.fillRect(x, y, w - gap, w - gap);
     
     if ( node.isInQuarentine() ) {
-      context.strokeStyle = node.getState();
+      context.strokeStyle = Constants.QUARENTINE_COLOR;
       context.strokeRect(x, y, w - gap, w - gap)
     }
     // context.beginPath();

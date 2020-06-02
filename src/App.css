@@ -96,7 +96,7 @@ HTML, BODY {
 
 .audio {
   grid-area: audio;
-  background-color: #b5c9e6;
+  /* background-color: #b5c9e6; */
 }
 
 .curve {
@@ -122,7 +122,7 @@ HTML, BODY {
 
 .blankboxr {
   grid-area: blankboxr;
-  background-color: #A00;
+  /* background-color: #A00; */
 }
 
 
