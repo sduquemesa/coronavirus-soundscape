@@ -9,8 +9,10 @@ export default class Constants {
   static QUARENTINE_COLOR = '#AAA'
 
   static SUSCEPTIBLE = 0;
-  static EXPOSED = 1;
-  static INFECTED = 2;
-  static REMOVED = 3;
-  static DEAD = 4;
+  static QUARENTINE = 1;
+  static EXPOSED = 2;
+  static INFECTED = 3;
+  static REMOVED = 4;
+  static DEAD = 5;
+
 }
