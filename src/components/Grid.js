@@ -359,7 +359,11 @@ export default class Grid extends Component<Props, State> {
       let row = [];
       for (let c = 0; c < nCols; c++) {
         let node = new GridNode(this.rng, r, c);
-        node.immune = this.rng.random() < this.state.immunityFraction;
+        // node.immune = this.rng.random() < this.state.immunityFraction;
+        if (this.rng.random() < this.state.immunityFraction) {
+          node.setInQuarentine()
+          node.quarentine = true;
+        };
 
         row.push(node);
       }
@@ -734,6 +738,11 @@ export default class Grid extends Component<Props, State> {
 
     context.fillRect(x, y, w, w);
     context.fillRect(x, y, w - gap, w - gap);
+    
+    if ( node.isInQuarentine() ) {
+      context.strokeStyle = node.getState();
+      context.strokeRect(x, y, w - gap, w - gap)
+    }
     // context.beginPath();
     // context.arc(x+w/2, y+w/2, w/2-1, 0, 2 * Math.PI);
     // context.fill();
@@ -829,14 +838,14 @@ export default class Grid extends Component<Props, State> {
     }
 
     let immunityFractionSlider = null;
-    // if (showAll || this.props.showImmunityFractionSlider) {
-    //   let sliderName = this.props.immunitySliderName || "Immunity";
-    //
-    //   immunityFractionSlider =
-    //       this.renderSlider(sliderName, this.state.immunityFraction,
-    //           (e, value) => { this.setState({immunityFraction: value}); },
-    //           0, 1, 0.01, true, this.props.highlight === "immunity");
-    // }
+    if (showAll || this.props.showImmunityFractionSlider) {
+      let sliderName = this.props.immunitySliderName || "Immunity";
+    
+      immunityFractionSlider =
+          this.renderSlider(sliderName, this.state.immunityFraction,
+              (e, value) => { this.setState({immunityFraction: value}); },
+              0, 1, 0.01, true, this.props.highlight === "immunity");
+    }
 
     let hospitalCapacitySlider = null;
     if (showAll || this.props.showHospitalCapacitySlider) {
@@ -1019,8 +1028,8 @@ export default class Grid extends Component<Props, State> {
           <div style={{ height: "0.5em" }} />
           {highlightedSlider}
 
-          {/* {hospitalCapacitySlider} */}
-          {/* {deathRateSlider} */}
+          {hospitalCapacitySlider}
+          {deathRateSlider}
           {chanceOfIsolationAfterSymptomsSlider}
           {decreaseInEncountersAfterSymptomsSlider}
 
@@ -1030,8 +1039,8 @@ export default class Grid extends Component<Props, State> {
           {transmissionProbabilitySlider}
           {immunityFractionSlider}
 
-          {/* {daysIncubatingSlider} */}
-          {/* {daysSymptomaticSlider} */}
+          {daysIncubatingSlider}
+          {daysSymptomaticSlider}
 
           {toggleLongDistanceNetwork}
 

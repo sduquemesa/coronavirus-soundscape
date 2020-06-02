@@ -130,83 +130,6 @@ export default class Plot extends Component<Props, State> {
     context.setLineDash([]);
     context.lineWidth = 2;
 
-    // if (this.state.showInfected || true) {
-    //   context.strokeStyle = Constants.INFECTED_COLOR;
-    //   for (let i = 1; i < this.props.infectedPerDay.length; i++) {
-    //     let day1 = i - 1
-    //     let day2 = i
-    //     let value1 = this.props.infectedPerDay[day1]
-    //     let value2 = this.props.infectedPerDay[day2]
-    //
-    //     if (value2 === null) {
-    //       context.strokeStyle = '#000';
-    //       context.lineWidth = 1;
-    //       this.drawLine(context, day2, 0, day2, this.maxValue);
-    //       context.strokeStyle = Constants.INFECTED_COLOR;
-    //       context.lineWidth = 2;
-    //     }
-    //     if (value1 === null || value2 === null) {
-    //       continue;
-    //     }
-    //
-    //     if (this.state.showInfected) {
-    //       if (this.showHospitalCapacity()) {
-    //         if (value1 > this.props.hospitalCapacity && value2 > this.props.hospitalCapacity) {
-    //           context.fillStyle = '#ffd6dd';
-    //           context.beginPath();
-    //           context.moveTo(this.xcoord(day1), this.ycoord(this.props.hospitalCapacity));
-    //           context.lineTo(this.xcoord(day1), this.ycoord(value1));
-    //           context.lineTo(this.xcoord(day2), this.ycoord(value2));
-    //           context.lineTo(this.xcoord(day2), this.ycoord(this.props.hospitalCapacity));
-    //           context.fill();
-    //         }
-    //       }
-    //
-    //       this.drawLine(context, day1, value1, day2, value2);
-    //     }
-    //   }
-    // }
-    //
-    // if (this.state.showRecovered) {
-    //   context.strokeStyle = REMOVED_COLOR;
-    //   this.drawSeries(this.props.recoveredPerDay, context);
-    // }
-    //
-    // if (this.state.showDead) {
-    //   context.strokeStyle = Constants.DEAD_COLOR;
-    //   this.drawSeries(this.props.deadPerDay, context);
-    // }
-
-
-    // for (let i = 0; i < this.props.infectedPerDay.length; i++) {
-    //   let day = i;
-    //   let infected = this.props.infectedPerDay[day];
-    //
-    //   if (infected === null) {
-    //     context.fillStyle = '#000';
-    //     // this.drawLine(context, day+0.5, 0, day+0.5, this.maxValue);
-    //     this.drawBar(context, day, 0, day+1, this.maxValue);
-    //   } else {
-    //     let recovered = this.props.recoveredPerDay[day];
-    //     let dead = this.props.deadPerDay[day];
-    //     let susceptible = this.props.population - infected - recovered - dead;
-    //
-    //     context.lineWidth = 1;
-    //
-    //     context.fillStyle = Constants.INFECTED_COLOR;
-    //     this.drawBar(context, day, 0, day+1, infected);
-    //
-    //     context.fillStyle = Constants.SUSCEPTIBLE_COLOR;
-    //     this.drawBar(context, day, infected, day+1, infected+susceptible);
-    //
-    //     context.fillStyle = REMOVED_COLOR;
-    //     this.drawBar(context, day, infected+susceptible, day+1, infected+susceptible+recovered);
-    //
-    //     context.fillStyle = Constants.DEAD_COLOR;
-    //     this.drawBar(context, day, infected+susceptible+recovered, day+1, infected+susceptible+recovered+dead);
-    //   }
-    // }
-
     let zerosPath = [];
     let infectedPath = [];
     let recoveredPath = [];
@@ -392,7 +315,7 @@ export default class Plot extends Component<Props, State> {
         <div className="plot-container">
           {/* <div className="plot-yaxis">population</div> */}
           <div className="plot-chart">
-            <canvas ref={this.canvasRef} width={widthToUse} height={this.height} />
+            <canvas className="canvas" ref={this.canvasRef} width={widthToUse} height={this.height} />
           </div>
           <div className="plot-xaxis">time ⟶</div>
           {/* <div className="plot-legend">

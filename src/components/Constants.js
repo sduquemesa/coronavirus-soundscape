@@ -6,6 +6,7 @@ export default class Constants {
   static ISOLATING_COLOR = '#8094ff';
   static REMOVED_COLOR = '#999';
   static DEAD_COLOR = '#000';
+  static QUARENTINE_COLOR = '#AAA'
 
   static SUSCEPTIBLE = 0;
   static EXPOSED = 1;

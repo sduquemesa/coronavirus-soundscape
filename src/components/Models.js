@@ -34,6 +34,8 @@ export class GridNode {
 
     this.isolating = false;
 
+    this.quarentine = false;
+
     this.rng = rng;
   }
 
@@ -105,9 +107,18 @@ export class GridNode {
     this.nextState = this.state
   }
 
+  setInQuarentine() {
+    this._setState(Constants.QUARENTINE)
+  }
+
   isIsolating(): boolean {
     return this.isolating;
   }
+
+  isInQuarentine(): boolean {
+    return this.quarentine;
+  }
+
 
   tryToInfect(neighbor: GridNode, transProb: number) {
     if (!neighbor.isSusceptible()) {
@@ -137,6 +148,7 @@ export class GridNode {
          allowDeaths: boolean,
          deathRate: number,
          chanceOfIsolationAfterSymptoms: number) {
+
     if (this.nextState !== this.state) {
       if (this.nextState === Constants.EXPOSED && daysIncubating === 0) {
         this.nextState = Constants.INFECTED;

@@ -32,7 +32,7 @@ class App extends Component<Props, State> {
     let selfQuarantined = <code className="code-quarantined">Self-quarantined</code>;
 
     return (
-      <div className="container">
+      <div className="main-container">
         <Grid gridRows={201}
               gridCols={201}
               // highlight="transmissionRate"
@@ -42,7 +42,7 @@ class App extends Component<Props, State> {
               randomSeed={100}
               showAliveFraction={true}
               showAllControls={true}
-              // showDaysPerStateControls={true}
+              showDaysPerStateControls={true}
               showDeaths={true}
               showTransmissionProbabilitySlider={true}
               showChanceOfIsolationAfterSymptomsSlider={true}
@@ -50,6 +50,7 @@ class App extends Component<Props, State> {
               // showTransmissionProbabilitySlider={true}
               // showTravelRadiusSlider={true}
               speed={1}
+              immunityFraction={0.7}
           />
       </div>
     );
@@ -59,7 +60,8 @@ class App extends Component<Props, State> {
 
   render() {
     return (
-      <div className="main-container">
+      <div className="root-container">
+          <div style={{height:"5em"}} />
           {this.renderMainPost()}
       </div>
     );

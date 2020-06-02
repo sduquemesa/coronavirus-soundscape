@@ -48,6 +48,11 @@ HTML, BODY {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* .root-container {
+  width: 100%;
+  justify-items: center;
+} */
+
 /* .main-container {
   display: grid;
   grid-template-areas:
@@ -303,12 +308,18 @@ CODE {
 } */
 
 .plot-chart {
-  /* align-content: center; */
-  justify-self: center;
-  align-self: center;
-  order: 0;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  border: 0;
 }
 
+/* .canvas {
+  padding: 0;
+  margin: auto;
+  display: block;
+  width: 800px;
+} */
 
 .simulation-prompt {
   /*font-weight: bold;*/
@@ -350,7 +361,7 @@ CODE {
 
   margin-left: 0.5em;
   margin-top: 0.5em;
-  margin-bottom: -0.7em;
+  margin-bottom: 0.3em;
   font-size: 11pt !important;
   font-weight: bold;
 }
