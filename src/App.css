@@ -48,10 +48,9 @@ HTML, BODY {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* .root-container {
-  width: 100%;
-  justify-items: center;
-} */
+.root-container {
+  background-color: whitesmoke;
+}
 
 /* .main-container {
   display: grid;
@@ -387,7 +386,6 @@ CODE {
   margin-left: 5em;
   margin-right: 5em;
   padding: 0 0.25em;
-
 }
 
 .slider-minus {

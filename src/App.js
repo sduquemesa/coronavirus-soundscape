@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import './App.css'
 import Grid from "./components/Grid";
-import NodeLegend from "./components/NodeLegend";
-import Figure from "./components/Figure";
 import { Oscillator } from "tone";
 
 type Props = {
@@ -24,22 +22,22 @@ class App extends Component<Props, State> {
 
     this.handleClick = this.handleClick.bind(this);
     this.oscillator = new Oscillator({
-      type : "sine" ,
-      frequency : 880 ,
+      type : "triangle" ,
+      frequency : 10000 ,
       detune : 0 ,
       phase : 0 ,
       partials : [] ,
       partialCount : 0
     }).toMaster();
 
-    this.oscillator1 = new Oscillator({
+    this.oscillator1 = new Oscillator( {
       type : "square" ,
       frequency : 440 ,
       detune : 0 ,
       phase : 0 ,
       partials : [] ,
       partialCount : 0
-    }).toMaster();
+    } ).toMaster();
 
 
     // this.oscillator.start();
@@ -49,7 +47,7 @@ class App extends Component<Props, State> {
   handleClick() {
     if (this.state.oscillatorActive) {
       this.oscillator.start();
-      this.oscillator1.start();
+      // this.oscillator1.start();
       this.setState( {
         oscillatorActive: false,
       } );
