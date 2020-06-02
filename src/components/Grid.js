@@ -785,7 +785,7 @@ export default class Grid extends Component<Props, State> {
     }
 
     return (
-      <div className={"slider-container" + highlightedClass}>
+      <div className="slider-container">
         <div className="slider-name">{name}{valueStr}</div>
         <div className="slider-slider">
           <Slider classes={{
