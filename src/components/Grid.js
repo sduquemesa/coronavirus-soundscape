@@ -13,6 +13,7 @@ import WidgetButton from "./WidgetButton";
 import Plot from "./Plot"
 import Constants from "./Constants";
 import NodeLegend from "./NodeLegend";
+import { Oscillator } from "tone";
 
 
 type Props = {
@@ -101,6 +102,9 @@ type State = {
   deadPerDay: number[],
   infectedPerDay: number[],
   recoveredPerDay: number[],
+
+  // Sound
+  soundIsActive: boolean,
 }
 
 export default class Grid extends Component<Props, State> {
@@ -161,6 +165,8 @@ export default class Grid extends Component<Props, State> {
     showSpeedControls: false,
     showTransmissionProbabilitySlider: false,
     showTravelRadiusSlider: false,
+
+    soundIsActive: false,
   };
 
   grid: GridNode[][];
@@ -185,6 +191,16 @@ export default class Grid extends Component<Props, State> {
     this.onTick = this.onTick.bind(this);
     this.onEnter = this.onEnter.bind(this);
     this.onLeave = this.onLeave.bind(this);
+
+    this.oscillator = new Oscillator({
+      type : "triangle" ,
+      frequency : 400 ,
+      detune : 0 ,
+      phase : 0 ,
+      partials : [] ,
+      partialCount : 0
+    }).toMaster();
+
 
     this.initializeFromProps(this.props, true);
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
@@ -250,6 +266,8 @@ export default class Grid extends Component<Props, State> {
       hospitalCapacitySliderHighlighted: false,
       speed: props.speed,
 
+      soundIsActive: false,
+
       // Outcomes
       capacityPerDay: [],
       deadPerDay: [],
@@ -280,9 +298,6 @@ export default class Grid extends Component<Props, State> {
   onTick() {
     if (this.state.playing && this.state.visible) {
       this.simulateStep();
-      // this.simulateStep();
-      // this.simulateStep();
-      // this.simulateStep();
       this.redraw(true);
     }
   }
@@ -323,7 +338,7 @@ export default class Grid extends Component<Props, State> {
   generate(force: boolean) {
     // actually regenerate iff any of the simulation parameters have changed
     let currentSimulationParams = [
-        // this.state.immunityFraction,
+        this.state.immunityFraction,
     ];
     if (!force && Utils.arraysEqual(this.previousSimulationParams, currentSimulationParams)) {
       // console.log('rejecting generate');
@@ -518,13 +533,21 @@ export default class Grid extends Component<Props, State> {
 
     this.state.centerNodeNeighborsToDisplay = centerNodeNeighborsToDisplay;
 
+
+    if (actualInfectedNodes === 0) {
+      this.generate(true);
+      this.forceUpdate(); 
+      this.resetPlotVariables();
+    }
+
     // Update the number of active nodes, and the playing bit if necessary
     this.setState({
       numActiveNodes: actualInfectedNodes,
-      playing: this.state.playing && actualInfectedNodes !== 0,
+      // playing: this.state.playing && actualInfectedNodes !== 0,
     });
 
     this.redraw(true);
+
   }
 
   isCenterNode(r: number, c: number): boolean {
@@ -618,10 +641,23 @@ export default class Grid extends Component<Props, State> {
     if (this.state.numActiveNodes === 0) {
       // If network is dead, play button acts as reset + play button.
       this.generate(true);
+      console.log("restarting")
     }
+
+    console.log(this.state.soundIsActive,this.state.playing);
+    if (!this.state.soundIsActive && this.state.playing) {
+      this.oscillator.stop();
+      console.log("off");
+    } else if (this.state.soundIsActive && !this.state.playing) {
+      this.oscillator.start();
+      console.log("on");
+    }
+
     this.setState({
       playing: !this.state.playing,
+      soundIsActive: !this.state.soundIsActive,
     });
+
   }
 
   inInitialPosition(): boolean {
@@ -939,11 +975,13 @@ export default class Grid extends Component<Props, State> {
     let playbackControls = null;
     if (showAll || this.props.showPlaybackControls) {
       let newNetworkButton = <WidgetButton onClick={() => {this.setState({playing: false}); this.generate(true); this.forceUpdate(); this.resetPlotVariables()} } >Reset</WidgetButton>;
+      
       let text = <span style={{fontSize: '10pt'}}>▷</span>;
       if (this.state.playing) {
         text = <span><b>||</b></span>;
       }
-      let togglePlaybackButton = <WidgetButton highlighted={!this.state.playing} onClick={() => {this.togglePlayback(); } } >{text}</WidgetButton>;
+      let togglePlaybackButton = <WidgetButton highlighted={!this.state.playing} onClick={() => {this.togglePlayback();  } } >{text}</WidgetButton>;
+      
       let stepButton = <WidgetButton onClick={() => {this.simulateStep(); this.setState({playing: false}); } } >Step</WidgetButton>;
 
       playbackControls =

@@ -8,7 +8,6 @@ type Props = {
 
 type State = {
   spoilersVisible: boolean,
-  oscillatorActive: boolean,
 }
 
 class App extends Component<Props, State> {
@@ -17,30 +16,8 @@ class App extends Component<Props, State> {
 
     this.state = {
       spoilersVisible: false,
-      oscillatorActive: false,
     }
 
-    this.handleClick = this.handleClick.bind(this);
-    this.oscillator = new Oscillator({
-      type : "triangle" ,
-      frequency : 10000 ,
-      detune : 0 ,
-      phase : 0 ,
-      partials : [] ,
-      partialCount : 0
-    }).toMaster();
-
-    this.oscillator1 = new Oscillator( {
-      type : "square" ,
-      frequency : 440 ,
-      detune : 0 ,
-      phase : 0 ,
-      partials : [] ,
-      partialCount : 0
-    } ).toMaster();
-
-
-    // this.oscillator.start();
 
   }
 
@@ -103,7 +80,6 @@ class App extends Component<Props, State> {
       <div className="root-container">
           <div style={{height:"5em"}} />
           {this.renderMainPost()}
-          <button onClick={this.handleClick}>start</button>
       </div>
     );
   }
