@@ -1,23 +1,27 @@
 import { Oscillator, Gain, Master } from "tone";
 
-export default class OscillatorArray {
+export default class Synth {
 
     constructor(NumberOfOscillators) {
 
-        this.oscillators = [...new Array(NumberOfOscillators)].map( 
-            () => { new Oscillator(); } 
-        );
+        this.oscillators = [];
+        for (let index = 0; index < NumberOfOscillators; index++) {
+            let osc = new Oscillator;
+            this.oscillators.push(osc);
+        }
 
-        this.oscillatorsGain = [...new Array(NumberOfOscillators)].map( 
-            () => { new Gain(); } 
-        );
+        this.oscillatorsGain = [];
+        for (let index = 0; index < NumberOfOscillators; index++) {
+            let gain = new Gain;
+            this.oscillatorsGain.push(gain);
+        }
 
         this.masterGain = new Gain();
 
-        // Connect Oscullators to Gains and then to master Gain
+        // Connect Oscillators to Gains and then to master Gain
         this.oscillators.map(
             (osc, index) => {
-                osc.connect(this.oscillatorsGain[index]);
+                this.oscillators[index].connect(this.oscillatorsGain[index]);
                 this.oscillatorsGain[index].connect(this.masterGain);
             }
         );

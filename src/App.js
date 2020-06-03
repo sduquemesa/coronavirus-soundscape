@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import './App.css'
 import Grid from "./components/Grid";
-import { Oscillator } from "tone";
+import Synth from "./components/Synth";
 
 type Props = {
 }
@@ -18,23 +18,11 @@ class App extends Component<Props, State> {
       spoilersVisible: false,
     }
 
+    // this.synth = new Synth(2);
+    // this.synth.connect();
+    // this.synth.start();
+    // this.synth.setFrequency(440);
 
-  }
-
-  handleClick() {
-    if (this.state.oscillatorActive) {
-      this.oscillator.start();
-      // this.oscillator1.start();
-      this.setState( {
-        oscillatorActive: false,
-      } );
-    } else {
-      this.oscillator.stop();
-      this.oscillator1.stop();
-      this.setState( {
-        oscillatorActive: true,
-      } );
-    }
   }
 
   // noinspection JSMethodCanBeStatic
@@ -50,8 +38,8 @@ class App extends Component<Props, State> {
 
     return (
       <div className="main-container">
-        <Grid gridRows={61}
-              gridCols={61}
+        <Grid gridRows={60}
+              gridCols={60}
               // highlight="transmissionRate"
               hospitalCapacityPct={0.05}
               nodeSize={9}
