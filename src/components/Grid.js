@@ -1,6 +1,6 @@
 // @flow
 
-import React, {Component} from 'react'
+import React, {Component} from 'react';
 import '../App.css';
 import Utils from "../Utils";
 import Slider from '@material-ui/lab/Slider';
@@ -13,7 +13,9 @@ import WidgetButton from "./WidgetButton";
 import Plot from "./Plot"
 import Constants from "./Constants";
 import NodeLegend from "./NodeLegend";
-import { Oscillator } from "tone";
+import Synth from "./Synth";
+import Oscillator from 'tone';
+
 
 
 type Props = {
@@ -188,15 +190,10 @@ export default class Grid extends Component<Props, State> {
     this.onEnter = this.onEnter.bind(this);
     this.onLeave = this.onLeave.bind(this);
 
-    this.oscillator = new Oscillator({
-      type : "triangle" ,
-      frequency : 400 ,
-      detune : 0 ,
-      phase : 0 ,
-      partials : [] ,
-      partialCount : 0
-    }).toMaster();
-
+    
+    this.oscillators = new Synth(36);
+    this.oscillators.connect();
+    // this.oscillators.start();
 
     this.initializeFromProps(this.props, true);
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
@@ -332,7 +329,7 @@ export default class Grid extends Component<Props, State> {
   generate(force: boolean) {
     // actually regenerate iff any of the simulation parameters have changed
     let currentSimulationParams = [
-        this.state.immunityFraction,
+        // this.state.immunityFraction,
     ];
     if (!force && Utils.arraysEqual(this.previousSimulationParams, currentSimulationParams)) {
       // console.log('rejecting generate');
@@ -492,10 +489,14 @@ export default class Grid extends Component<Props, State> {
         }
       }
     }
+
+
     let chanceOfIsolationAfterSymptoms = this.state.chanceOfIsolationAfterSymptoms;
     if (!this.props.showChanceOfIsolationAfterSymptomsSlider) {
       chanceOfIsolationAfterSymptoms = 0;
     }
+
+
     let overCapacity = this.state.hospitalCapacityPct > -1 && actualInfectedNodes > this.state.hospitalCapacityPct * (nRows*nCols);
     for (let r = 0; r < nRows; r++) {
       for (let c = 0; c < nCols; c++) {
@@ -508,6 +509,7 @@ export default class Grid extends Component<Props, State> {
             chanceOfIsolationAfterSymptoms);
       }
     }
+
     let actualDeadNodes = 0;
     let actualRecoveredNodes = 0;
     for (let r = 0; r < nRows; r++) {
@@ -520,6 +522,7 @@ export default class Grid extends Component<Props, State> {
         }
       }
     }
+
     this.state.capacityPerDay.push(this.state.hospitalCapacityPct * this.props.gridRows * this.props.gridRows);
     this.state.deadPerDay.push(actualDeadNodes);
     this.state.infectedPerDay.push(actualInfectedNodes);
@@ -527,7 +530,62 @@ export default class Grid extends Component<Props, State> {
 
     this.state.centerNodeNeighborsToDisplay = centerNodeNeighborsToDisplay;
 
+    // Loop over blocks of 6
+    let blockWidth = 10;
+    let numOfBlocks = 6;
+    let OscBlockState = [];
+    // let numOfBlocks = this.gridCols/blockWidth;
+    for (let rowBlock = 0; rowBlock < numOfBlocks; rowBlock++) {
+      let blockState_col = [];
+      for (let colBlock = 0; colBlock < numOfBlocks; colBlock++) {
+        
+        let blockState = {
+          x: 0,
+          y: 0,
+          susceptible: 0,
+          quarantine: 0,
+          exposed: 0,
+          infected: 0,
+          removed: 0,
+          dead: 0,
+        }
 
+        // Iterate over the elements inside the block
+        for (let rowInBlock = 0; rowInBlock < blockWidth; rowInBlock++) {
+          for (let colInBlock = 0; colInBlock < blockWidth; colInBlock++) {
+
+            let r = rowBlock*blockWidth + rowInBlock;
+            let c = colBlock*blockWidth + colInBlock;
+            let node = this.grid[r][c];
+            blockState.x = c;
+            blockState.y = r;
+            
+            if (node.getNextState() === Constants.SUSCEPTIBLE) {
+              blockState.susceptible++;
+            } else if (node.getNextState() === Constants.QUARENTINE) {
+              blockState.quarantine++;
+            } else if (node.getNextState() === Constants.EXPOSED) {
+              blockState.exposed++;
+            } else if (node.getNextState() === Constants.INFECTED) {
+              blockState.infected++;
+            } else if (node.getNextState() === Constants.REMOVED) {
+              blockState.removed++;
+            } else if (node.getNextState() === Constants.DEAD) {
+              blockState.dead++;
+            }
+
+          }
+        }
+
+        blockState_col.push(blockState);
+
+      }
+
+      OscBlockState.push(blockState_col);
+    }
+    console.log(OscBlockState);
+
+    // Autoplay: regenerates itself when done
     if (actualInfectedNodes === 0) {
       this.generate(true);
       this.forceUpdate(); 
@@ -638,13 +696,13 @@ export default class Grid extends Component<Props, State> {
       console.log("restarting")
     }
 
-    if (this.state.playing) {
-      this.oscillator.stop();
-      // console.log("sound off");
-    } else if (!this.state.playing) {
-      this.oscillator.start();
-      // console.log("sound on");
-    }
+    // if (this.state.playing) {
+    //   this.oscillator.stop();
+    //   // console.log("sound off");
+    // } else if (!this.state.playing) {
+    //   this.oscillator.start();
+    //   // console.log("sound on");
+    // }
 
     this.setState({
       playing: !this.state.playing,
