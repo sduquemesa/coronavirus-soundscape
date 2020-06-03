@@ -49,7 +49,7 @@ export default class Synth {
     setFrequency(freq) {
         this.oscillators.forEach(
             (osc, index) => {
-                osc.frequency.value = freq*(index+1);
+                osc.frequency.value = freq[index]*400;
             }
         )
     }
