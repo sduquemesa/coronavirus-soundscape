@@ -102,9 +102,6 @@ type State = {
   deadPerDay: number[],
   infectedPerDay: number[],
   recoveredPerDay: number[],
-
-  // Sound
-  soundIsActive: boolean,
 }
 
 export default class Grid extends Component<Props, State> {
@@ -157,7 +154,7 @@ export default class Grid extends Component<Props, State> {
     showDegreeSlider: false,
     showHospitalCapacitySlider: false,
     showImmunityFractionSlider: false,
-    showInteractions: true,
+    showInteractions: false,
     showPersonHoursSlider: false,
     showPlaybackControls: true,
     showProTip: false,
@@ -166,7 +163,6 @@ export default class Grid extends Component<Props, State> {
     showTransmissionProbabilitySlider: false,
     showTravelRadiusSlider: false,
 
-    soundIsActive: false,
   };
 
   grid: GridNode[][];
@@ -265,8 +261,6 @@ export default class Grid extends Component<Props, State> {
       drawNodeOutlines: props.drawNodeOutlines,
       hospitalCapacitySliderHighlighted: false,
       speed: props.speed,
-
-      soundIsActive: false,
 
       // Outcomes
       capacityPerDay: [],
@@ -644,18 +638,16 @@ export default class Grid extends Component<Props, State> {
       console.log("restarting")
     }
 
-    console.log(this.state.soundIsActive,this.state.playing);
-    if (!this.state.soundIsActive && this.state.playing) {
+    if (this.state.playing) {
       this.oscillator.stop();
-      console.log("off");
-    } else if (this.state.soundIsActive && !this.state.playing) {
+      // console.log("sound off");
+    } else if (!this.state.playing) {
       this.oscillator.start();
-      console.log("on");
+      // console.log("sound on");
     }
 
     this.setState({
       playing: !this.state.playing,
-      soundIsActive: !this.state.soundIsActive,
     });
 
   }
