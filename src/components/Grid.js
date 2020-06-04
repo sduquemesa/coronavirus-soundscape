@@ -135,7 +135,7 @@ export default class Grid extends Component<Props, State> {
     immunityFraction: 0,
     maxIterations: -1,
     nug: 20,
-    personHours: 10,
+    personHours: 0,
     transmissionProbability: 0.4,
     travelRadius: 5,
 
@@ -197,6 +197,21 @@ export default class Grid extends Component<Props, State> {
 
     this.initializeFromProps(this.props, true);
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+
+    this.frequencies = [];
+    let lowestFrequency = 20;
+    let highestFrequency = 2000;
+    // Create random frequencies for each of the node states
+    let numberOfNodeStates = Constants.DEAD + 1;
+    for (let i = 0; i < numberOfNodeStates; i++) {
+      this.frequencies.push( Math.random()*(highestFrequency-lowestFrequency) + lowestFrequency )      
+    }
+    this.frequencies = this.frequencies.sort( (a,b) => (a-b) );
+
+    //Define the type of oscillator for each cell state
+    // this.oscillatorType = ['sine4','sine2','triangle','square','sine','sawtooth'];
+    this.oscillatorType = ['sine','sine','sine','sine','sine','sine'];
+
   }
 
   updateWindowDimensions() {
@@ -539,16 +554,18 @@ export default class Grid extends Component<Props, State> {
       let blockState_col = [];
       for (let colBlock = 0; colBlock < numOfBlocks; colBlock++) {
         
-        let blockState = {
-          x: 0,
-          y: 0,
-          susceptible: 0,
-          quarantine: 0,
-          exposed: 0,
-          infected: 0,
-          removed: 0,
-          dead: 0,
-        }
+        // let blockState = {
+        //   x: 0,
+        //   y: 0,
+        //   susceptible: 0,
+        //   quarantine: 0,
+        //   exposed: 0,
+        //   infected: 0,
+        //   removed: 0,
+        //   dead: 0,
+        // }
+
+        let blockState = [...new Array(6)].map( () => 0 );
 
         // Iterate over the elements inside the block
         for (let rowInBlock = 0; rowInBlock < blockWidth; rowInBlock++) {
@@ -557,33 +574,31 @@ export default class Grid extends Component<Props, State> {
             let r = rowBlock*blockWidth + rowInBlock;
             let c = colBlock*blockWidth + colInBlock;
             let node = this.grid[r][c];
-            blockState.x = c;
-            blockState.y = r;
             
             if (node.getNextState() === Constants.SUSCEPTIBLE) {
-              blockState.susceptible++;
+              blockState[Constants.SUSCEPTIBLE]++;
             } else if (node.getNextState() === Constants.QUARENTINE) {
-              blockState.quarantine++;
+              blockState[Constants.QUARENTINE]++;
             } else if (node.getNextState() === Constants.EXPOSED) {
-              blockState.exposed++;
+              blockState[Constants.EXPOSED]++;
             } else if (node.getNextState() === Constants.INFECTED) {
-              blockState.infected++;
+              blockState[Constants.INFECTED]++;
             } else if (node.getNextState() === Constants.REMOVED) {
-              blockState.removed++;
+              blockState[Constants.REMOVED]++;
             } else if (node.getNextState() === Constants.DEAD) {
-              blockState.dead++;
+              blockState[Constants.DEAD]++;
             }
 
           }
         }
 
-        blockState_col.push(blockState);
+        OscBlockState.push(blockState);
 
       }
 
-      OscBlockState.push(blockState_col);
     }
-    console.log(OscBlockState);
+
+    this.updateOscillators(OscBlockState);
 
     // Autoplay: regenerates itself when done
     if (actualInfectedNodes === 0) {
@@ -591,6 +606,8 @@ export default class Grid extends Component<Props, State> {
       this.forceUpdate(); 
       this.resetPlotVariables();
     }
+
+
 
     // Update the number of active nodes, and the playing bit if necessary
     this.setState({
@@ -654,6 +671,38 @@ export default class Grid extends Component<Props, State> {
     return neighbor;
   }
 
+  updateOscillators(blocks: Object) {
+
+  
+    let oscType = []; 
+    let oscFreqs = [];
+    let oscGains = [];
+    for (let i = 0; i < blocks.length; i++) {
+      const oscBlock = blocks[i];
+
+      // set the type of oscillator of each block depending on the node state with max number
+      const indexOfMaxValue = oscBlock.indexOf(Math.max(...oscBlock));
+      oscType.push(this.oscillatorType[indexOfMaxValue]);
+
+      // set oscillators gain
+      oscGains.push(oscBlock[indexOfMaxValue]/100);
+
+      // set the oscillators frequencies
+      let meanFreq = 0;
+      for (let j = 0; j < oscBlock.length; j++) {
+        meanFreq += oscBlock[j]*this.frequencies[j];        
+      }
+      oscFreqs.push(meanFreq/100);
+      
+    }
+
+    console.log(oscFreqs);
+    this.oscillators.setOscType(oscType);
+    this.oscillators.setFrequency(oscFreqs, (4/10)*5000*this.state.speed/1000);
+    this.oscillators.setOscGain(oscGains);
+
+  }
+
   // noinspection JSUnusedLocalSymbols
   getNeighbors(node: GridNode, r: number, c: number, linkedNodes: Set<GridNode>): GridNode[] {
     let neighbors = [];
@@ -696,13 +745,13 @@ export default class Grid extends Component<Props, State> {
       console.log("restarting")
     }
 
-    // if (this.state.playing) {
-    //   this.oscillator.stop();
-    //   // console.log("sound off");
-    // } else if (!this.state.playing) {
-    //   this.oscillator.start();
-    //   // console.log("sound on");
-    // }
+    if (this.state.playing) {
+      this.oscillators.stop();
+      // console.log("sound off");
+    } else if (!this.state.playing) {
+      this.oscillators.start();
+      // console.log("sound on");
+    }
 
     this.setState({
       playing: !this.state.playing,
@@ -1010,17 +1059,17 @@ export default class Grid extends Component<Props, State> {
               0, 0.3, 0.01, true, false);
     }
 
-    // let speedSlider = null;
-    // let speedMinusButton = null;
-    // let speedPlusButton = null;
-    // if (showAll || this.props.showSpeedControls) {
-    //   speedMinusButton = <WidgetButton onClick={() => { this.setState({speed: Math.max(0, this.state.speed - 0.20)}) }}>🚶</WidgetButton>;
-    //   speedPlusButton = <WidgetButton onClick={() => { this.setState({speed: Math.min(1, this.state.speed + 0.20)}) }}>🏃</WidgetButton>;
-    //   speedSlider =
-    //       this.renderSlider("Speed", this.state.speed,
-    //           (e, value) => { this.setState({speed: value}); },
-    //           0, 1, 0.01, 0, false);
-    // }
+    let speedSlider = null;
+    let speedMinusButton = null;
+    let speedPlusButton = null;
+    if (showAll || this.props.showSpeedControls) {
+      speedMinusButton = <WidgetButton onClick={() => { this.setState({speed: Math.max(0, this.state.speed - 0.20)}) }}>🚶</WidgetButton>;
+      speedPlusButton = <WidgetButton onClick={() => { this.setState({speed: Math.min(1, this.state.speed + 0.20)}) }}>🏃</WidgetButton>;
+      speedSlider =
+          this.renderSlider("Speed", this.state.speed,
+              (e, value) => { this.setState({speed: value}); },
+              0.01, 1, 0.001, 0, false);
+    }
 
     let playbackControls = null;
     if (showAll || this.props.showPlaybackControls) {
@@ -1080,8 +1129,9 @@ export default class Grid extends Component<Props, State> {
       );
     }
 
-    let intervalMillis = 1000 * (1-Math.pow(this.state.speed, 1/5));
-    intervalMillis = Math.max(intervalMillis, 16);
+    // let intervalMillis = 100 * (1-Math.pow(this.state.speed, 1/5));
+    // intervalMillis = Math.max(intervalMillis, 16);
+    let intervalMillis = 5000*this.state.speed;
 
     let highlightedSlider = null;
     if (this.props.highlight === "transmissionRate") {
@@ -1123,7 +1173,7 @@ export default class Grid extends Component<Props, State> {
           {chanceOfIsolationAfterSymptomsSlider}
           {decreaseInEncountersAfterSymptomsSlider}
 
-          {personHoursSlider}
+          {/* {personHoursSlider} */}
           {travelRadiusSlider}
 
           {transmissionProbabilitySlider}
@@ -1133,6 +1183,8 @@ export default class Grid extends Component<Props, State> {
           {daysSymptomaticSlider}
 
           {toggleLongDistanceNetwork}
+
+          {speedSlider}
 
           {playbackControls}
         </div>
@@ -1157,7 +1209,7 @@ export default class Grid extends Component<Props, State> {
 
         <div className="blankboxr"></div>
 
-        {/*{speedSlider}*/}
+        
         <Interval milliseconds={intervalMillis} callback={this.onTick} />
       </div>
     )

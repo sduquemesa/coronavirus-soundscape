@@ -47,7 +47,7 @@ class App extends Component<Props, State> {
               randomSeed={100}
               showAliveFraction={true}
               showAllControls={true}
-              showDaysPerStateControls={true}
+              showDaysPerStateControls={false}
               showDeaths={true}
               showTransmissionProbabilitySlider={true}
               showChanceOfIsolationAfterSymptomsSlider={true}

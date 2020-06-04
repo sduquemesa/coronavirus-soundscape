@@ -23,10 +23,12 @@ export default class Synth {
             (osc, index) => {
                 this.oscillators[index].connect(this.oscillatorsGain[index]);
                 this.oscillatorsGain[index].connect(this.masterGain);
+                this.oscillatorsGain[index].gain.value = 0.2;
             }
         );
 
         this.masterGain.gain.value = 1/this.oscillators.length;
+        
 
     }
 
@@ -46,10 +48,31 @@ export default class Synth {
         this.oscillators.forEach( osc => osc.stop() );
     }
 
-    setFrequency(freq) {
+    setFrequency(freq, glideTime) {
         this.oscillators.forEach(
             (osc, index) => {
-                osc.frequency.value = freq[index]*400;
+                if (Math.random() < 0.8) {
+                    osc.frequency.exponentialRampToValueAtTime(freq[index],"+"+glideTime.toString());
+                } else {
+                    osc.frequency.value = freq[index];
+                }
+                
+            }
+        )
+    }
+
+    setOscType(oscTypeList) {
+        this.oscillators.forEach(
+            (osc, index) => {
+                osc.type = oscTypeList[index];
+            }
+        )
+    }
+
+    setOscGain(oscGainList) {
+        this.oscillatorsGain.forEach(
+            (osc, index) => {
+                osc.gain.value = oscGainList[index];
             }
         )
     }
