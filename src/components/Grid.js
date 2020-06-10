@@ -126,17 +126,17 @@ export default class Grid extends Component<Props, State> {
     gridRows: 1,
 
     // Simulation parameters
-    daysIncubating: 7,
-    daysSymptomatic: 8,
-    deathRate: 0.03,
+    daysIncubating: 5,
+    daysSymptomatic: 14,
+    deathRate: 0.032,
     decreaseInEncountersAfterSymptoms: 0.25,
     chanceOfIsolationAfterSymptoms: 0.25,
     hospitalCapacityPct: -1,
-    immunityFraction: 0,
+    immunityFraction: 0.1,
     maxIterations: -1,
     nug: 20,
-    personHours: 0,
-    transmissionProbability: 0.4,
+    personHours: 5,
+    transmissionProbability: 0.185,
     travelRadius: 5,
 
     // Rendering parameters
@@ -199,7 +199,7 @@ export default class Grid extends Component<Props, State> {
     this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
 
     this.frequencies = [];
-    let lowestFrequency = 20;
+    let lowestFrequency = 200;
     let highestFrequency = 2000;
     // Create random frequencies for each of the node states
     let numberOfNodeStates = Constants.DEAD + 1;
@@ -210,7 +210,8 @@ export default class Grid extends Component<Props, State> {
 
     //Define the type of oscillator for each cell state
     // this.oscillatorType = ['sine4','sine2','triangle','square','sine','sawtooth'];
-    this.oscillatorType = ['sine','sine','sine','sine','sine','sine'];
+    // this.oscillatorType = ['sine','sine','sine','sine','sine','sine'];
+    this.oscillatorType = ['sine','sine','sine','sine2','sine2','triangle'];
 
   }
 
@@ -381,7 +382,7 @@ export default class Grid extends Component<Props, State> {
       for (let c = 0; c < nCols; c++) {
         let node = new GridNode(this.rng, r, c);
         // node.immune = this.rng.random() < this.state.immunityFraction;
-        if (this.rng.random() < this.state.immunityFraction) {
+        if (Math.random() < this.state.immunityFraction) {
           node.setInQuarentine()
           node.quarentine = true;
         };
@@ -605,7 +606,18 @@ export default class Grid extends Component<Props, State> {
       this.generate(true);
       this.forceUpdate(); 
       this.resetPlotVariables();
+
+      this.frequencies = [];
+      let lowestFrequency = 200;
+      let highestFrequency = 2000;
+      // Create random frequencies for each of the node states
+      let numberOfNodeStates = Constants.DEAD + 1;
+      for (let i = 0; i < numberOfNodeStates; i++) {
+        this.frequencies.push( Math.random()*(highestFrequency-lowestFrequency) + lowestFrequency )      
+      }
+
     }
+    this.frequencies = this.frequencies.sort( (a,b) => (a-b) );
 
 
 
@@ -645,9 +657,11 @@ export default class Grid extends Component<Props, State> {
 
     let neighbor = null;
     while (neighbor === null) {
-      let dr = this.rng.randIntBetween(-radius, radius);
-      let dc = this.rng.randIntBetween(-radius, radius);
-
+      // let dr = this.rng.randIntBetween(-radius, radius);
+      // let dc = this.rng.randIntBetween(-radius, radius);
+      let dr = Math.floor( Math.random() * (2*radius) - radius );
+      let dc = Math.floor( Math.random() * (2*radius) - radius );
+      
       if (dr === 0 && dc === 0) {
         continue;
       }
@@ -682,7 +696,12 @@ export default class Grid extends Component<Props, State> {
 
       // set the type of oscillator of each block depending on the node state with max number
       const indexOfMaxValue = oscBlock.indexOf(Math.max(...oscBlock));
-      oscType.push(this.oscillatorType[indexOfMaxValue]);
+
+      if (Math.random() > oscBlock[indexOfMaxValue]/100 ) {
+        oscType.push(this.oscillatorType[indexOfMaxValue]);
+      } else {
+        oscType.push(this.oscillatorType[0])
+      }
 
       // set oscillators gain
       oscGains.push(oscBlock[indexOfMaxValue]/100);
@@ -698,7 +717,7 @@ export default class Grid extends Component<Props, State> {
 
     console.log(oscFreqs);
     this.oscillators.setOscType(oscType);
-    this.oscillators.setFrequency(oscFreqs, (4/10)*5000*this.state.speed/1000);
+    this.oscillators.setFrequency(oscFreqs, (4/10)*50*this.state.speed/1000);
     this.oscillators.setOscGain(oscGains);
 
   }
@@ -1068,12 +1087,12 @@ export default class Grid extends Component<Props, State> {
       speedSlider =
           this.renderSlider("Speed", this.state.speed,
               (e, value) => { this.setState({speed: value}); },
-              0.01, 1, 0.001, 0, false);
+              0.0001, 1, 0.00001, 0, false);
     }
 
     let playbackControls = null;
     if (showAll || this.props.showPlaybackControls) {
-      let newNetworkButton = <WidgetButton onClick={() => {this.setState({playing: false}); this.generate(true); this.forceUpdate(); this.resetPlotVariables()} } >Reset</WidgetButton>;
+      let newNetworkButton = <WidgetButton onClick={() => {this.setState({playing: false}); this.generate(true); this.forceUpdate(); this.resetPlotVariables(); this.oscillators.stop();} } >Reset</WidgetButton>;
       
       let text = <span style={{fontSize: '10pt'}}>▷</span>;
       if (this.state.playing) {
@@ -1131,7 +1150,7 @@ export default class Grid extends Component<Props, State> {
 
     // let intervalMillis = 100 * (1-Math.pow(this.state.speed, 1/5));
     // intervalMillis = Math.max(intervalMillis, 16);
-    let intervalMillis = 5000*this.state.speed;
+    let intervalMillis = 50*this.state.speed;
 
     let highlightedSlider = null;
     if (this.props.highlight === "transmissionRate") {
@@ -1168,8 +1187,8 @@ export default class Grid extends Component<Props, State> {
           <div style={{ height: "0.5em" }} />
           {highlightedSlider}
 
-          {hospitalCapacitySlider}
-          {deathRateSlider}
+          {/* {hospitalCapacitySlider} */}
+          {/* {deathRateSlider} */}
           {chanceOfIsolationAfterSymptomsSlider}
           {decreaseInEncountersAfterSymptomsSlider}
 
@@ -1179,10 +1198,10 @@ export default class Grid extends Component<Props, State> {
           {transmissionProbabilitySlider}
           {immunityFractionSlider}
 
-          {daysIncubatingSlider}
-          {daysSymptomaticSlider}
+          {/* {daysIncubatingSlider} */}
+          {/* {daysSymptomaticSlider} */}
 
-          {toggleLongDistanceNetwork}
+          {/* {toggleLongDistanceNetwork} */}
 
           {speedSlider}
 

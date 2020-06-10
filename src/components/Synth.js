@@ -51,12 +51,13 @@ export default class Synth {
     setFrequency(freq, glideTime) {
         this.oscillators.forEach(
             (osc, index) => {
-                if (Math.random() < 0.8) {
+                if (Math.random() < 0.01) {
                     osc.frequency.exponentialRampToValueAtTime(freq[index],"+"+glideTime.toString());
                 } else {
                     osc.frequency.value = freq[index];
                 }
-                
+                // osc.frequency.exponentialRampToValueAtTime(freq[index],"+"+glideTime.toString());
+                // osc.frequency.value = freq[index];
             }
         )
     }

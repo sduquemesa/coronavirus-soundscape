@@ -55,7 +55,7 @@ class App extends Component<Props, State> {
               // showTransmissionProbabilitySlider={true}
               // showTravelRadiusSlider={true}
               speed={1}
-              immunityFraction={0.7}
+              immunityFraction={0.1}
           />
       </div>
     );
