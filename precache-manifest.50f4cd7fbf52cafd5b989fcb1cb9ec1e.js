@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "6ba7e1a213ac5d67a60f",
-    "url": "/coronavirus-soundscape/static/css/main.756b107e.chunk.css"
+    "revision": "d83349503f72eb2abacf",
+    "url": "/coronavirus-soundscape/static/css/main.67857f39.chunk.css"
   },
   {
-    "revision": "6ba7e1a213ac5d67a60f",
-    "url": "/coronavirus-soundscape/static/js/main.6ba7e1a2.chunk.js"
+    "revision": "d83349503f72eb2abacf",
+    "url": "/coronavirus-soundscape/static/js/main.d8334950.chunk.js"
   },
   {
     "revision": "a0f14858a21a76bafde5",
@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/coronavirus-soundscape/static/js/runtime~main.3907f023.js"
   },
   {
-    "revision": "87c10fa927e2b8089ec972c120aac80d",
+    "revision": "ded5053b8f759ea0aad5db605463ce5f",
     "url": "/coronavirus-soundscape/index.html"
   }
 ];
