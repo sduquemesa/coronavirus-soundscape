@@ -44,16 +44,16 @@ class App extends Component<Props, State> {
               hospitalCapacityPct={0.05}
               nodeSize={9}
               nug={5}
-              randomSeed={100}
+              randomSeed={52}
               showAliveFraction={true}
               showAllControls={true}
-              showDaysPerStateControls={false}
+              // showDaysPerStateControls={false}
               showDeaths={true}
               showTransmissionProbabilitySlider={true}
               showChanceOfIsolationAfterSymptomsSlider={true}
               // showPersonHoursSlider={true}
               // showTransmissionProbabilitySlider={true}
-              // showTravelRadiusSlider={true}
+              showTravelRadiusSlider={true}
               speed={1}
               immunityFraction={0.1}
           />

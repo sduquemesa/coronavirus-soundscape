@@ -144,7 +144,7 @@ export default class Grid extends Component<Props, State> {
     speed: 0.5,
 
     // Controls
-    immunitySliderName: "Immunity",
+    immunitySliderName: "en cuarentena",
     maxTransmissionRate: 1,
     showAliveFraction: false,
     showAllControls: false,
@@ -988,7 +988,7 @@ export default class Grid extends Component<Props, State> {
     let transmissionProbabilitySlider = null;
     if (showAll || this.props.showTransmissionProbabilitySlider) {
       transmissionProbabilitySlider =
-          this.renderSlider("Transmission rate", this.state.transmissionProbability,
+          this.renderSlider("tasa de transmisión", this.state.transmissionProbability,
               (e, value) => { this.setState({transmissionProbability: value}); },
               0, this.props.maxTransmissionRate, 0.01, false, this.props.highlight === "transmissionRate");
     }
@@ -1020,7 +1020,7 @@ export default class Grid extends Component<Props, State> {
     let travelRadiusSlider = null;
     if (showAll || this.props.showTravelRadiusSlider) {
       travelRadiusSlider =
-          this.renderSlider("Travel radius", this.state.travelRadius,
+          this.renderSlider("radio de viaje", this.state.travelRadius,
               (e, value) => { this.setState({travelRadius: value}); },
               0, Math.min(30, Math.floor(this.props.gridRows/2)), 1, false, false);
     }
@@ -1052,7 +1052,7 @@ export default class Grid extends Component<Props, State> {
     let chanceOfIsolationAfterSymptomsSlider = null;
     if (showAll || this.props.showChanceOfIsolationAfterSymptomsSlider) {
       chanceOfIsolationAfterSymptomsSlider =
-          this.renderSlider("Self-quarantine rate", this.state.chanceOfIsolationAfterSymptoms,
+          this.renderSlider("cuarentena voluntaria", this.state.chanceOfIsolationAfterSymptoms,
               (e, value) => { this.setState({chanceOfIsolationAfterSymptoms: value}); },
               0, 1, 0.01, true, false);
     }
@@ -1085,14 +1085,14 @@ export default class Grid extends Component<Props, State> {
       speedMinusButton = <WidgetButton onClick={() => { this.setState({speed: Math.max(0, this.state.speed - 0.20)}) }}>🚶</WidgetButton>;
       speedPlusButton = <WidgetButton onClick={() => { this.setState({speed: Math.min(1, this.state.speed + 0.20)}) }}>🏃</WidgetButton>;
       speedSlider =
-          this.renderSlider("Speed", this.state.speed,
+          this.renderSlider("velocidad", this.state.speed,
               (e, value) => { this.setState({speed: value}); },
               0.0001, 1, 0.00001, 0, false);
     }
 
     let playbackControls = null;
     if (showAll || this.props.showPlaybackControls) {
-      let newNetworkButton = <WidgetButton onClick={() => {this.setState({playing: false}); this.generate(true); this.forceUpdate(); this.resetPlotVariables(); this.oscillators.stop();} } >Reset</WidgetButton>;
+      let newNetworkButton = <WidgetButton onClick={() => {this.setState({playing: false}); this.generate(true); this.forceUpdate(); this.resetPlotVariables(); this.oscillators.stop();} } >Reiniciar</WidgetButton>;
       
       let text = <span style={{fontSize: '10pt'}}>▷</span>;
       if (this.state.playing) {
@@ -1100,13 +1100,13 @@ export default class Grid extends Component<Props, State> {
       }
       let togglePlaybackButton = <WidgetButton highlighted={!this.state.playing} onClick={() => {this.togglePlayback();  } } >{text}</WidgetButton>;
       
-      let stepButton = <WidgetButton onClick={() => {this.simulateStep(); this.setState({playing: false}); } } >Step</WidgetButton>;
+      let stepButton = <WidgetButton onClick={() => {this.simulateStep(); this.setState({playing: false}); } } >Paso</WidgetButton>;
 
       playbackControls =
         <div className='playback-controls-container'>
           {newNetworkButton}
           {togglePlaybackButton}
-          {stepButton}
+          {/* {stepButton} */}
 
           {/*{speedMinusButton}*/}
           {/*{speedPlusButton}*/}
@@ -1185,12 +1185,15 @@ export default class Grid extends Component<Props, State> {
 
         <div className="controls">
           <div style={{ height: "0.5em" }} />
+
+          {playbackControls}
+          
           {highlightedSlider}
 
           {/* {hospitalCapacitySlider} */}
           {/* {deathRateSlider} */}
-          {chanceOfIsolationAfterSymptomsSlider}
-          {decreaseInEncountersAfterSymptomsSlider}
+          {/* {chanceOfIsolationAfterSymptomsSlider} */}
+          {/* {decreaseInEncountersAfterSymptomsSlider} */}
 
           {/* {personHoursSlider} */}
           {travelRadiusSlider}
@@ -1203,18 +1206,16 @@ export default class Grid extends Component<Props, State> {
 
           {/* {toggleLongDistanceNetwork} */}
 
-          {speedSlider}
-
-          {playbackControls}
+          {/* {speedSlider} */}
         </div>
         
-        <div className="curve">
+        {/* <div className="curve">
           {plot}  
-        </div>
+        </div> */}
         
         <div className="audio"></div>
 
-        <div className="blankboxl">
+        {/* <div className="blankboxl">
           <span className="legend-text">
             Infected &nbsp;<NodeLegend type="infected"/> 
           </span>
@@ -1224,7 +1225,7 @@ export default class Grid extends Component<Props, State> {
           <span className="legend-text">
             Dead &nbsp;<NodeLegend type="dead"/>
           </span>
-        </div>
+        </div> */}
 
         <div className="blankboxr"></div>
 
