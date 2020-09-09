@@ -1,13 +1,13 @@
 {
-  "main.css": "/coronavirus-soundscape/static/css/main.4f822e1c.chunk.css",
-  "main.js": "/coronavirus-soundscape/static/js/main.da1c1ea5.chunk.js",
-  "main.js.map": "/coronavirus-soundscape/static/js/main.da1c1ea5.chunk.js.map",
+  "main.css": "/coronavirus-soundscape/static/css/main.d501eb25.chunk.css",
+  "main.js": "/coronavirus-soundscape/static/js/main.2d0864e7.chunk.js",
+  "main.js.map": "/coronavirus-soundscape/static/js/main.2d0864e7.chunk.js.map",
   "static/js/1.a0f14858.chunk.js": "/coronavirus-soundscape/static/js/1.a0f14858.chunk.js",
   "static/js/1.a0f14858.chunk.js.map": "/coronavirus-soundscape/static/js/1.a0f14858.chunk.js.map",
   "runtime~main.js": "/coronavirus-soundscape/static/js/runtime~main.3907f023.js",
   "runtime~main.js.map": "/coronavirus-soundscape/static/js/runtime~main.3907f023.js.map",
-  "static/css/main.4f822e1c.chunk.css.map": "/coronavirus-soundscape/static/css/main.4f822e1c.chunk.css.map",
+  "static/css/main.d501eb25.chunk.css.map": "/coronavirus-soundscape/static/css/main.d501eb25.chunk.css.map",
   "index.html": "/coronavirus-soundscape/index.html",
-  "precache-manifest.96b536096a047c00007d75fa9cd9825f.js": "/coronavirus-soundscape/precache-manifest.96b536096a047c00007d75fa9cd9825f.js",
+  "precache-manifest.c63f6eb1294b74bc8d2a809965b4325d.js": "/coronavirus-soundscape/precache-manifest.c63f6eb1294b74bc8d2a809965b4325d.js",
   "service-worker.js": "/coronavirus-soundscape/service-worker.js"
 }
