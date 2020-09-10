@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/coronavirus-soundscape/static/js/runtime~main.3907f023.js"
   },
   {
-    "revision": "097dc830c31fb77f227689bd811b541b",
+    "revision": "999b4df6ee717436c451d9be65a6d0e5",
     "url": "/coronavirus-soundscape/index.html"
   }
 ];

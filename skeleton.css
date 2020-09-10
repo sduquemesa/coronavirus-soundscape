@@ -57,6 +57,15 @@ h3 {
     font-size: 18px;
 }
 
+li {
+    margin-top: 10px !important;
+    font-family: 'Open Sans', sans-serif;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
 .video-holder {
     display: block;
     margin-left: auto;

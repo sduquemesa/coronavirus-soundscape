@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/coronavirus-soundscape/precache-manifest.c63f6eb1294b74bc8d2a809965b4325d.js"
+  "/coronavirus-soundscape/precache-manifest.acf994a27eb526943b1e67d486c12b81.js"
 );
 
 workbox.clientsClaim();
